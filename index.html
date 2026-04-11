@@ -79,6 +79,7 @@
             /* Заміни посилання нижче на свій рендер вітальні */
             background: url('img/livingheader.jpg') center/cover;
             z-index: 1;
+            will-change: transform;
         }
         .hero-overlay {
             position: absolute; inset: 0;
@@ -120,6 +121,7 @@
         .grid-item {
             position: relative; overflow: hidden;
             border-radius: 4px; aspect-ratio: 4/5;
+            will-change: transform;
         }
         /* Різні розміри для елементів сітки */
         .item-1 { grid-column: span 8; aspect-ratio: 16/9; }
@@ -143,7 +145,7 @@
         /* --- 360 VR SECTION --- */
         .vr-section { padding: 10vmax 5vw; text-align: center; }
         .vr-section h2 { font-family: var(--font-head); font-size: 3rem; margin-bottom: 3rem; font-weight: 400;}
-        #panorama { width: 100%; height: 70vh; border-radius: 8px; overflow: hidden; }
+        #panorama { width: 100%; height: 100vh; border-radius: 8px; overflow: hidden; }
 
         /* --- CONTACT SECTION --- */
         .contact {
@@ -173,6 +175,30 @@
         }
         .submit-btn:hover { background: var(--text-main); color: var(--bg); }
 
+/* --- СТИЛЬ ДЛЯ КНОПКИ В HERO --- */
+        .hero-btn {
+            margin-top: 2.5rem;
+            background: transparent;
+            color: var(--text-main);
+            border: 1px solid var(--text-main);
+            padding: 16px 45px;
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-radius: 40px;
+            transition: all 0.4s ease;
+            cursor: none; /* залишаємо кастомний курсор */
+            opacity: 0; /* схована для стартової анімації */
+            transform: translateY(20px);
+        }
+
+        .hero-btn:hover {
+            background: var(--text-main);
+            color: var(--bg);
+            transform: scale(1.05); /* Легке збільшення при наведенні */
+        }
+        
         @media (max-width: 768px) {
             .grid-item { grid-column: span 12 !important; aspect-ratio: 4/5 !important; }
             .contact { grid-template-columns: 1fr; }
@@ -191,6 +217,9 @@
         <div class="hero-content">
             <h1 class="reveal-text">Nazar Lakusta</h1>
             <p class="fade-up">Creating Spaces. Premium 3D & VR.</p>
+            <button class="hero-btn fade-up hover-target" onclick="lenis.scrollTo('.contact')">
+                Обговорити проєкт
+            </button>
         </div>
     </section>
 
@@ -203,19 +232,19 @@
     <section class="portfolio">
         <div class="grid">
             <a href="#" class="grid-item item-1 hover-target">
-                <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?q=80&w=2000&auto=format&fit=crop" alt="Premium Living Room">
+                <img src="img/renderrr.jpg" alt="Premium Living Room">
                 <div class="overlay"><h3>Premium Living</h3></div>
             </a>
             <a href="#" class="grid-item item-2 hover-target">
-                <img src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?q=80&w=1000&auto=format&fit=crop" alt="Director Office">
+                <img src="img/кабінет4.JPG" alt="Director Office">
                 <div class="overlay"><h3>Corporate Office</h3></div>
             </a>
             <a href="#" class="grid-item item-3 hover-target">
-                <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=1000&auto=format&fit=crop" alt="Bathroom Concept">
+                <img src="img/kitchen.jpg" alt="Bathroom Concept">
                 <div class="overlay"><h3>Stone Bath Concept</h3></div>
             </a>
             <a href="#" class="grid-item item-4 hover-target">
-                <img src="https://images.unsplash.com/photo-1556911220-bff31c812dba?q=80&w=1000&auto=format&fit=crop" alt="Minimalist Kitchen">
+                <img src="img/1.jpg" alt="Minimalist Kitchen">
                 <div class="overlay"><h3>Dark Kitchen</h3></div>
             </a>
         </div>
@@ -223,6 +252,7 @@
 
     <section class="vr-section hover-target">
         <h2>Відчуйте простір до його створення</h2>
+        <h2>Покрутись в інтерактивній 360 панорамі</h2>
         <div id="panorama"></div>
     </section>
 
@@ -230,9 +260,9 @@
         <div>
             <h2>Let's discuss<br>your project.</h2>
             <div class="social-links">
-                <a href="#" class="hover-target">Instagram</a>
-                <a href="#" class="hover-target">Telegram</a>
-                <a href="#" class="hover-target">Behance</a>
+                <a href="https://www.instagram.com/nl.archviz/" class="hover-target">Instagram</a>
+                <a href="https://t.me/nazarko_1703" class="hover-target">Telegram</a>
+                <a href="https://www.behance.net/4570e1c5" class="hover-target">Behance</a>
             </div>
         </div>
         <div>
@@ -252,27 +282,29 @@
         </div>
     </section>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
 
     <script>
-        // 1. Lenis Smooth Scroll Setup
+        // 1. ЧИСТИЙ І ЛЕГКИЙ СКРОЛ (Lenis) - без ефекту "магніту"
         const lenis = new Lenis({
-            duration: 1.2,
+            duration: 1.2, // Швидкість (можеш зробити 1.0 для ще швидшого відгуку)
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            smooth: true
+            smoothWheel: true,
+            smoothTouch: false // На телефонах залишаємо рідний скрол, щоб не лагало
         });
+
         function raf(time) {
             lenis.raf(time);
             requestAnimationFrame(raf);
         }
         requestAnimationFrame(raf);
 
-        // 2. Custom Cursor Logic
+        // 2. КАСТОМНИЙ КУРСОР
         const cursor = document.getElementById('cursor');
-        const hoverTargets = document.querySelectorAll('.hover-target, a, button');
+        const hoverTargets = document.querySelectorAll('.hover-target, a, button, input, textarea');
 
         document.addEventListener('mousemove', (e) => {
             gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1, ease: "power2.out" });
@@ -283,56 +315,52 @@
             target.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
         });
 
-        // 3. GSAP Animations & Preloader
+        // 3. АНІМАЦІЇ (Легкі, без паралаксу)
         gsap.registerPlugin(ScrollTrigger);
 
         let count = 0;
         let counterElement = document.getElementById('counter');
+        
         let preloaderInterval = setInterval(() => {
-            count += 2;
+            count += 2; 
             counterElement.innerText = count;
+            
             if(count >= 100) {
                 clearInterval(preloaderInterval);
-                initAnimations();
+                initAnimations(); 
             }
-        }, 30);
+        }, 30); 
 
         function initAnimations() {
-            // Hide Preloader
+            // Ховаємо прелоадер
             gsap.to("#preloader", {
-                yPercent: -100, duration: 1, ease: "power4.inOut",
+                yPercent: -100, 
+                duration: 1, 
+                ease: "power4.inOut",
                 onComplete: () => {
-                    // Hero Text Reveal
+                    // Анімація головного тексту
                     gsap.to(".reveal-text", { clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)", duration: 1.5, ease: "power4.out" });
                     gsap.to(".fade-up", { opacity: 1, y: 0, duration: 1, delay: 0.5 });
                 }
             });
 
-            // Hero Parallax on Scroll
-            gsap.to("#heroBg", {
-                yPercent: 30,
-                ease: "none",
-                scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true }
-            });
-
-            // About Text Fade
+            // Плавна поява тексту "Про мене"
             gsap.from(".about-text", {
-                scrollTrigger: { trigger: ".about", start: "top 80%" },
-                y: 50, opacity: 0, duration: 1.5, ease: "power3.out"
+                scrollTrigger: { trigger: ".about", start: "top 85%" },
+                y: 30, opacity: 0, duration: 1, ease: "power2.out"
             });
 
-            // Portfolio Items Stagger
+            // Плавна поява портфоліо
             gsap.from(".grid-item", {
-                scrollTrigger: { trigger: ".portfolio", start: "top 70%" },
-                y: 100, opacity: 0, duration: 1, stagger: 0.2, ease: "power3.out"
+                scrollTrigger: { trigger: ".portfolio", start: "top 80%" },
+                y: 50, opacity: 0, duration: 0.8, stagger: 0.15, ease: "power2.out"
             });
         }
 
-        // 4. Pannellum 360 Panorama Setup
+        // 4. ПАНОРАМА 360
         pannellum.viewer('panorama', {
             "type": "equirectangular",
-            // Заміни це посилання на свою панораму з 3ds Max (JPG)
-            "panorama": "https://pannellum.org/images/alma.jpg",
+            "panorama": "img/360000.jpg",
             "autoLoad": true,
             "compass": false,
             "showZoomCtrl": false,
