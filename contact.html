@@ -4,96 +4,288 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Контакти | Nazar Lakusta</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    
     <style>
-        /* Базові стилі */
-        :root { --bg: #111111; --text-main: #EAEAEA; --accent: #ffffff; --font-head: 'Playfair Display', serif; --font-body: 'Manrope', sans-serif; }
+        /* --- БАЗОВІ СТИЛІ --- */
+        :root { 
+            --bg: #030303; /* Абсолютний чорний для максимального контрасту */
+            --text-main: #FFFFFF; 
+            --text-muted: #888888;
+            --accent: #ffffff; 
+            --font-head: 'Playfair Display', serif; 
+            --font-body: 'Manrope', sans-serif; 
+        }
+        
         * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
-        body { background: var(--bg); color: var(--text-main); font-family: var(--font-body); overflow-x: hidden; height: 100vh; }
         
-        /* Встав стилі хедера і курсора */
-
-        .contact-wrapper {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            height: 100vh;
-            padding-top: 10vh; /* відступ під меню */
-        }
-
-        /* ЛІВА ЧАСТИНА: Контакти */
-        .contact-info { padding: 10vh 5vw; display: flex; flex-direction: column; justify-content: center; }
-        .contact-info h1 { font-family: var(--font-head); font-size: clamp(3rem, 6vw, 6rem); font-weight: 400; margin-bottom: 2rem; line-height: 1; }
+        html { scroll-behavior: smooth; } /* Стандартний плавний скрол без лагів */
         
-        /* Ультра-стильні посилання */
-        .social-mega { display: flex; flex-direction: column; gap: 1rem; margin-top: 3rem; }
-        .social-mega a {
-            font-family: var(--font-head); font-size: clamp(2rem, 4vw, 4rem); 
-            color: transparent; -webkit-text-stroke: 1px var(--text-main); /* Прозорий текст з контуром */
-            text-transform: uppercase; transition: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            display: inline-block; width: fit-content;
-        }
-        .social-mega a:hover {
-            color: var(--text-main); -webkit-text-stroke: 0px; transform: translateX(20px); font-style: italic;
+        body { 
+            background: var(--bg); color: var(--text-main); font-family: var(--font-body); 
+            overflow-x: hidden; -webkit-font-smoothing: antialiased;
         }
 
-        /* ПРАВА ЧАСТИНА: Фото */
-        .contact-photo {
-            position: relative; height: 100%; overflow: hidden;
-            display: flex; align-items: center; justify-content: center;
+        /* --- ХЕДЕР (МЕНЮ) --- */
+        .main-header {
+            position: fixed; top: 0; left: 0; width: 100%; padding: 2rem 4vw; 
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 9000; background: linear-gradient(to bottom, rgba(3,3,3,0.9) 0%, rgba(3,3,3,0) 100%);
+            backdrop-filter: blur(10px);
         }
-        .img-reveal-wrapper {
-            width: 70%; height: 80%; border-radius: 10px; overflow: hidden;
-            clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0% 100%); /* Початковий стан для GSAP */
+        .logo { font-family: var(--font-head); font-size: 1.5rem; font-weight: 600; color: #fff; text-decoration: none; }
+        .nav-links { display: flex; gap: 3rem; }
+        .nav-links a { font-size: 1.5rem; text-transform: uppercase; letter-spacing: 2px; color: #ffffff; text-decoration: none; position: relative; }
+        .nav-links a::after {
+            content: ''; position: absolute; left: 0; bottom: -5px; width: 0; height: 1px;
+            background: #fff; transition: width 0.3s ease;
         }
-        .img-reveal-wrapper img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.2); }
+        .nav-links a:hover::after { width: 100%; }
 
-        @media (max-width: 768px) {
-            .contact-wrapper { grid-template-columns: 1fr; height: auto; }
-            .contact-photo { height: 60vh; order: -1; margin-top: 10vh; }
-            .img-reveal-wrapper { width: 90%; }
+        /* --- КАСТОМНИЙ КУРСОР --- */
+        .cursor {
+            position: fixed; top: 0; left: 0; width: 10px; height: 10px;
+            background-color: var(--accent); border-radius: 50%;
+            pointer-events: none; z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s, background-color 0.3s;
+            mix-blend-mode: difference;
+        }
+        .cursor.hovered {
+            width: 60px; height: 60px; background-color: rgba(255,255,255,0.1);
+            border: 1px solid var(--accent); backdrop-filter: blur(2px); mix-blend-mode: normal;
+        }
+
+        /* --- EDITORIAL СІТКА (Фото + Текст разом) --- */
+        .contact-hero {
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
+            padding: 15vh 4vw 5vh;
+        }
+        .contact-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 0; /* Щільна компоновка */
+            width: 100%; max-width: 1400px; align-items: center;
+        }
+
+        /* Права частина: Фото (Тепер воно частина композиції) */
+        .photo-block {
+            position: relative; width: 100%; aspect-ratio: 4/5; 
+            border-radius: 20px; overflow: hidden;
+            transform: translateX(-5%); /* Легке накладання на текст для стилю */
+        }
+        .photo-block img {
+            width: 100%; height: 100%; object-fit: cover;
+            filter: grayscale(100%); transition: filter 0.8s ease, transform 1.5s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        .photo-block:hover img { filter: grayscale(0%); transform: scale(1.05); }
+
+        /* Ліва частина: Інфо */
+        .info-block {
+            padding: 0 4vw; z-index: 2; position: relative;
+        }
+        .info-block h1 {
+            font-family: var(--font-head); font-size: clamp(3rem, 7vw, 7.5rem);
+            font-weight: 400; line-height: 1; margin-bottom: 2rem;
+            text-transform: uppercase; letter-spacing: -2px;
+        }
+        .info-block h1 span { font-style: italic; color: var(--text-muted); display: block; margin-left: 10%; }
+        
+        .contact-details { margin-bottom: 4rem; }
+        .contact-details p { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); margin-bottom: 0.5rem; }
+        .contact-details a {
+            font-size: clamp(1.2rem, 2vw, 2rem); color: var(--text-main); text-decoration: none;
+            display: inline-block; position: relative; transition: opacity 0.3s;
+        }
+        .contact-details a:hover { opacity: 0.7; }
+
+        /* МАГНІТНІ КНОПКИ СОЦМЕРЕЖ (APPLE STYLE) */
+        .social-label { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); margin-bottom: 1.5rem; }
+        .social-pills { display: flex; flex-wrap: wrap; gap: 1rem; }
+        
+        .magnetic-btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 16px 32px; border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 50px; text-decoration: none; color: var(--text-main);
+            font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;
+            position: relative; overflow: hidden; transition: border-color 0.3s;
+        }
+        .magnetic-btn span { position: relative; z-index: 2; pointer-events: none; }
+        .magnetic-btn::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--text-main); border-radius: 50px;
+            transform: scale(0); transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+            z-index: 1;
+        }
+        .magnetic-btn:hover { border-color: var(--text-main); }
+        .magnetic-btn:hover::before { transform: scale(1); }
+        .magnetic-btn:hover span { color: var(--bg); }
+
+        /* --- ФОРМА --- */
+        .form-section { padding: 15vh 4vw; border-top: 1px solid rgba(255,255,255,0.05); }
+        .form-wrapper { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 4vw; }
+        .form-header h2 { font-family: var(--font-head); font-size: clamp(2.5rem, 4vw, 4rem); font-weight: 400; margin-bottom: 1rem; }
+        .form-header p { color: var(--text-muted); font-size: 1.1rem; }
+        
+        .form-group { margin-bottom: 3rem; position: relative; }
+        .form-group input, .form-group textarea {
+            width: 100%; background: transparent; border: none;
+            border-bottom: 1px solid rgba(255,255,255,0.2); color: var(--text-main);
+            padding: 15px 0; font-family: var(--font-body); font-size: 1.1rem;
+            outline: none; transition: border-color 0.3s ease;
+        }
+        .form-group textarea { resize: none; min-height: 100px; }
+        .form-group input:focus, .form-group textarea:focus { border-bottom-color: var(--accent); }
+        
+        .submit-btn {
+            background: transparent; color: var(--text-main);
+            border: 1px solid rgba(255,255,255,0.4); padding: 18px 45px;
+            font-family: var(--font-body); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px;
+            border-radius: 50px; cursor: none; transition: all 0.4s ease;
+            width: 100%;
+        }
+        .submit-btn:hover { background: var(--text-main); color: var(--bg); }
+
+        @media (max-width: 1024px) {
+            .contact-grid { grid-template-columns: 1fr; gap: 5vh; }
+            .photo-block { transform: translateX(0); width: 100%; aspect-ratio: 16/9; order: -1; }
+            .info-block { padding: 0; text-align: center; }
+            .info-block h1 span { margin-left: 0; }
+            .social-pills { justify-content: center; }
+            .form-wrapper { grid-template-columns: 1fr; }
+            .form-header { text-align: center; margin-bottom: 3rem; }
         }
     </style>
 </head>
 <body>
+
     <div class="cursor" id="cursor"></div>
-    <div class="contact-wrapper">
-        <div class="contact-info">
-            <h1 class="fade-up">Let's create<br>something<br>beautiful.</h1>
-            <a href="mailto:your@email.com" class="hover-target" style="font-size: 1.2rem; color: #888; margin-top: 1rem;">nazar.lakusta@email.com</a>
+
+    <header class="main-header">
+        <a href="index.html" class="logo hover-target">NL.</a>
+        <nav class="nav-links">
+            <a href="index.html" class="hover-target">Головна</a>
+            <a href="portfolio.html" class="hover-target">Роботи</a>
+            <a href="contact.html" class="hover-target">Контакти</a>
+        </nav>
+    </header>
+
+    <section class="contact-hero">
+        <div class="contact-grid">
             
-            <div class="social-mega">
-                <a href="https://www.instagram.com/nl.archviz/" class="hover-target fade-up">Instagram</a>
-                <a href="https://t.me/nazarko_1703" class="hover-target fade-up">Telegram</a>
-                <a href="https://www.behance.net/4570e1c5" class="hover-target fade-up">Behance</a>
+            <div class="info-block gsap-fade">
+                <h1>Let's create <span>beautiful</span> spaces.</h1>
+                
+                <div class="contact-details">
+                    <p>Direct Email</p>
+                    <a href="mailto:nazar.lakusta@email.com" class="hover-target">nazarlakusta0303@gmail.com</a>
+                </div>
+                
+                <p class="social-label">Follow & Connect</p>
+                <div class="social-pills">
+                    <a href="https://www.instagram.com/nl.archviz/" class="magnetic-btn hover-target"><span>Instagram</span></a>
+                    <a href="https://t.me/nazarko_1703" class="magnetic-btn hover-target"><span>Telegram</span></a>
+                    <a href="https://www.behance.net/4570e1c5" class="magnetic-btn hover-target"><span>Behance</span></a>
+                    <a href="https://www.behance.net/4570e1c5" class="magnetic-btn hover-target"><span>Facebook</span></a>
+                </div>
             </div>
-        </div>
-        
-        <div class="contact-photo">
-            <div class="img-reveal-wrapper">
-                <img src="img/me.jpg" alt="Nazar Lakusta" class="photo-parallax">
+
+            <div class="photo-block gsap-photo">
+                <img src="img/me.jpg" alt="Nazar Lakusta">
             </div>
+
         </div>
-    </div>
+    </section>
+
+    <section class="form-section">
+        <div class="form-wrapper">
+            <div class="form-header gsap-fade-up">
+                <h2>Project Inquiry</h2>
+                <p>Розкажіть про свою ідею, і я зв'яжуся з вами найближчим часом.</p>
+            </div>
+            
+            <form action="https://api.web3forms.com/submit" method="POST" class="gsap-fade-up">
+                <input type="hidden" name="access_key" value="57add9be-1835-4310-8099-2b23cc45e8e1">
+                
+                <div class="form-group">
+                    <input type="text" name="name" placeholder="Ваше ім'я" required class="hover-target">
+                </div>
+                
+                <div class="form-group">
+                    <input type="email" name="email" placeholder="Email для зв'язку" required class="hover-target">
+                </div>
+                
+                <div class="form-group">
+                    <textarea name="message" placeholder="Деталі проєкту..." required class="hover-target"></textarea>
+                </div>
+                
+                <button type="submit" class="submit-btn hover-target">Надіслати запит</button>
+            </form>
+        </div>
+    </section>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
     <script>
-        // Анімації при завантаженні сторінки контактів
+        gsap.registerPlugin(ScrollTrigger);
+
+        // 1. Анімація курсора
+        const cursor = document.getElementById('cursor');
+        const hoverTargets = document.querySelectorAll('.hover-target, input, textarea, button');
+
+        document.addEventListener('mousemove', (e) => {
+            gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1, ease: "power2.out" });
+        });
+
+        hoverTargets.forEach(target => {
+            target.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+            target.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+        });
+
+        // 2. ВАУ-ЕФЕКТ: Магнітні кнопки
+        const magnets = document.querySelectorAll('.magnetic-btn');
+        magnets.forEach(btn => {
+            btn.addEventListener('mousemove', (e) => {
+                const position = btn.getBoundingClientRect();
+                const x = e.clientX - position.left - position.width / 2;
+                const y = e.clientY - position.top - position.height / 2;
+                
+                // Кнопка тягнеться до курсора
+                gsap.to(btn, {x: x * 0.3, y: y * 0.3, duration: 0.5, ease: "power2.out"});
+                // Текст всередині тягнеться ще сильніше для паралаксу
+                gsap.to(btn.querySelector('span'), {x: x * 0.2, y: y * 0.2, duration: 0.5, ease: "power2.out"});
+            });
+            
+            btn.addEventListener('mouseleave', () => {
+                // Повернення на місце
+                gsap.to(btn, {x: 0, y: 0, duration: 0.7, ease: "elastic.out(1, 0.3)"});
+                gsap.to(btn.querySelector('span'), {x: 0, y: 0, duration: 0.7, ease: "elastic.out(1, 0.3)"});
+            });
+        });
+
+        // 3. Анімації появи GSAP
         window.onload = () => {
-            // Поява фото знизу вгору (ефект шторки)
-            gsap.to(".img-reveal-wrapper", {
-                clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)", duration: 1.5, ease: "power4.inOut"
-            });
-            // Ефект Parallax для самого фото всередині маски
-            gsap.to(".photo-parallax", {
-                scale: 1, duration: 2, ease: "power3.out"
-            });
-            // Поява тексту зліва
-            gsap.fromTo(".fade-up", 
-                { opacity: 0, y: 50 }, 
-                { opacity: 1, y: 0, duration: 1, stagger: 0.15, ease: "power3.out", delay: 0.5 }
+            const tl = gsap.timeline();
+            
+            // Фото розкривається
+            tl.fromTo(".gsap-photo", 
+                { clipPath: "polygon(0 0, 0 0, 0 100%, 0% 100%)" },
+                { clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)", duration: 1.5, ease: "power4.inOut" }
             );
+
+            // Текст плавно виїжджає
+            tl.from(".gsap-fade", { x: -50, opacity: 0, duration: 1, ease: "power3.out" }, "-=0.8");
         };
-        // Додай сюди логіку курсора
+
+        // Анімація форми при скролі
+        gsap.utils.toArray('.gsap-fade-up').forEach(element => {
+            gsap.from(element, {
+                scrollTrigger: { trigger: element, start: "top 85%" },
+                y: 40, opacity: 0, duration: 1, ease: "power3.out"
+            });
+        });
     </script>
 </body>
 </html>
