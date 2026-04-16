@@ -229,6 +229,15 @@
 
 .burger { display: none; flex-direction: column; gap: 6px; z-index: 9001; }
 .burger span { display: block; width: 30px; height: 2px; background: #fff; transition: 0.3s; }
+/* --- ВИМИКАЄМО КАСТОМНИЙ КУРСОР НА ТАЧСКРІНАХ (ТЕЛЕФОНИ/ПЛАНШЕТИ) --- */
+@media (hover: none) and (pointer: coarse), (max-width: 1024px) {
+    .cursor {
+        display: none !important; /* Ховаємо нашу кастомну кульку */
+    }
+    * {
+        cursor: auto !important; /* Повертаємо стандартну поведінку системи */
+    }
+}
 
 @media (max-width: 768px) {
     .nav-links {
@@ -424,6 +433,25 @@
         "showZoomCtrl": false,
         "mouseZoom": false
     });
+
+    // 6. БУРГЕР МЕНЮ ДЛЯ МОБІЛЬНИХ
+const burgerBtn = document.getElementById('burgerBtn');
+const navLinks = document.querySelector('.nav-links');
+const navItems = document.querySelectorAll('.nav-links a');
+
+// Відкриття/закриття при кліку на сам бургер
+burgerBtn.addEventListener('click', () => {
+    burgerBtn.classList.toggle('active');
+    navLinks.classList.toggle('active');
+});
+
+// Автоматичне закриття меню при кліку на будь-яке посилання всередині нього
+navItems.forEach(item => {
+    item.addEventListener('click', () => {
+        burgerBtn.classList.remove('active');
+        navLinks.classList.remove('active');
+    });
+});
 </script>
 </body>
 </html>
