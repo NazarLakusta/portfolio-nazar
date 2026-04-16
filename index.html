@@ -203,6 +203,40 @@
             .grid-item { grid-column: span 12 !important; aspect-ratio: 4/5 !important; }
             .contact { grid-template-columns: 1fr; }
         }
+
+        /* --- HEADER & MENU --- */
+.main-header {
+    color: #EAEAEA;
+    position: fixed; top: 0; left: 0; width: 100%;
+    padding: 2rem 5vw; display: flex; justify-content: space-between; align-items: center;
+    z-index: 9000; /* Робить меню видимим на будь-якому фоні */
+}
+.header-text{
+    color: #EAEAEA;
+}
+.logo { font-family: var(--font-head); font-size: 2rem; font-weight: 600; color: #fff; }
+.nav-links { display: flex; gap: 3rem; }
+.nav-links a { font-size: 2rem; text-transform: uppercase; letter-spacing: 1px; color: #fff; position: relative; }
+.nav-links a::after {
+    content: ''; position: absolute; left: 0; bottom: -5px; width: 0; height: 1px;
+    background: #fff; transition: width 0.3s ease;
+}
+.nav-links a:hover::after { width: 100%; }
+
+.burger { display: none; flex-direction: column; gap: 6px; z-index: 9001; }
+.burger span { display: block; width: 30px; height: 2px; background: #fff; transition: 0.3s; }
+
+@media (max-width: 768px) {
+    .nav-links {
+        position: fixed; top: 0; right: -100%; width: 100vw; height: 100vh;
+        background: var(--bg); flex-direction: column; justify-content: center; align-items: center;
+        transition: 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+    }
+    .nav-links.active { right: 0; }
+    .burger { display: flex; }
+    .burger.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+    .burger.active span:nth-child(2) { transform: translateY(-8px) rotate(-45deg); }
+}
     </style>
 </head>
 <body>
@@ -210,6 +244,18 @@
     <div class="cursor" id="cursor"></div>
 
     <div id="preloader"><span id="counter">0</span>%</div>
+
+    <header class="main-header">
+        <a href="index.html" class="logo hover-target header-text">NL.</a>
+        <nav class="nav-links header-text">
+            <a href="index.html" class="header-text hover-target">Головна</a>
+            <a href="portfolio.html" class="header-text hover-target">Роботи</a>
+            <a href="contact.html" class="header-text hover-target">Контакти</a>
+        </nav>
+        <div class="burger hover-target" id="burgerBtn">
+            <span></span><span></span>
+        </div>
+    </header>
 
     <section class="hero">
         <div class="hero-bg" id="heroBg"></div>

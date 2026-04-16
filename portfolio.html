@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selected Works | Nazar Lakusta</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+    
+    <style>
+        /* --- CORE VARIABLES --- */
+        :root { 
+            --bg: #070707; 
+            --text-main: #EAEAEA; 
+            --accent: #ffffff; 
+            --font-head: 'Playfair Display', serif; 
+            --font-body: 'Manrope', sans-serif; 
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        
+        html { scroll-behavior: smooth; } /* Рідний плавний скрол для якорів */
+        
+        body { 
+            background: var(--bg); color: var(--text-main); font-family: var(--font-body); 
+            overflow-x: hidden; -webkit-font-smoothing: antialiased; 
+        }
+
+        /* --- СУПЕР КУРСОР --- */
+        .cursor {
+            position: fixed; top: 0; left: 0; width: 12px; height: 12px;
+            background-color: var(--accent); border-radius: 50%;
+            pointer-events: none; z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s, background-color 0.3s, border 0.3s;
+            mix-blend-mode: difference;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .cursor span {
+            color: #000; font-family: var(--font-body); font-size: 10px; font-weight: 600;
+            letter-spacing: 1px; opacity: 0; transition: opacity 0.3s;
+        }
+        .cursor.hovered {
+            width: 60px; height: 60px; background-color: rgba(255,255,255,0.1);
+            border: 1px solid var(--accent); backdrop-filter: blur(2px);
+        }
+        .cursor.drag-mode {
+            width: 80px; height: 80px; background-color: var(--accent); mix-blend-mode: normal;
+        }
+        .cursor.drag-mode span { opacity: 1; }
+
+        /* --- ХЕДЕР --- */
+        .main-header {
+            position: fixed; top: 0; left: 0; width: 100%; padding: 2rem 4vw; 
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 9000; mix-blend-mode: difference;
+        }
+        .logo { font-family: var(--font-head); font-size: 1.5rem; font-weight: 600; color: #fff; text-decoration: none; }
+        .nav-links { display: flex; gap: 3rem; }
+        .nav-links a { font-size: 2rem; text-transform: uppercase; letter-spacing: 2px; color: #ffffff; text-decoration: none; font-weight: 400; }
+
+        /* --- HERO ВСТУП --- */
+        .portfolio-hero {
+            /* Відступ зверху враховує висоту меню, текст піднято вище */
+            padding: 20vh 4vw 5vh; 
+        }
+        .hero-title {
+            font-family: var(--font-head); font-size: clamp(4rem, 10vw, 12rem);
+            font-weight: 400; line-height: 0.9; text-transform: uppercase;
+        }
+        .hero-title span { font-style: italic; color: #555; display: block; padding-left: 10vw;}
+
+        /* --- БЛОК ПРОЄКТУ --- */
+        .project-wrapper {
+            display: flex; padding: 10vh 4vw; border-top: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+        }
+        
+        /* Ліва частина - Інформація (Прилипає при скролі) */
+        .project-info {
+            width: 35%; position: sticky; top: 20vh; height: fit-content;
+            padding-right: 4vw;
+        }
+        .p-number { font-size: 1rem; color: #555; font-weight: 300; margin-bottom: 1rem; display: block; }
+        .project-info h2 { font-family: var(--font-head); font-size: clamp(2.5rem, 4vw, 4.5rem); font-weight: 400; line-height: 1.1; margin-bottom: 1.5rem; }
+        .project-meta-data {
+            display: flex; flex-direction: column; gap: 0.5rem;
+            font-size: 0.85rem; color: #888; text-transform: uppercase; letter-spacing: 1px;
+        }
+
+        /* Права частина - Галерея (Слайдер) */
+        .project-gallery { width: 65%; overflow: hidden; }
+        
+        .swiper { width: 100%; overflow: visible; }
+        .swiper-slide { 
+            width: 100%; aspect-ratio: 16/10; overflow: hidden;
+            opacity: 0.4; transition: opacity 0.5s ease;
+        }
+        .swiper-slide-active { opacity: 1; }
+        .swiper-slide img { 
+            width: 100%; height: 100%; object-fit: cover; 
+            transform: scale(1.1); transition: transform 1.5s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        .swiper-slide-active img { transform: scale(1); }
+
+        @media (max-width: 1024px) {
+            .project-wrapper { flex-direction: column; padding: 10vh 4vw; }
+            .project-info { width: 100%; position: relative; top: 0; margin-bottom: 3rem; }
+            .project-gallery { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cursor" id="cursor">
+        <span id="cursor-text">DRAG</span>
+    </div>
+
+    <header class="main-header">
+        <a href="index.html" class="logo hover-target">NL.</a>
+        <nav class="nav-links">
+            <a href="index.html" class="hover-target">Головна</a>
+            <a href="portfolio.html" class="hover-target">Роботи</a>
+            <a href="contact.html" class="hover-target">Контакти</a>
+        </nav>
+    </header>
+
+    <section class="portfolio-hero">
+        <h1 class="hero-title gsap-reveal">Selected<br><span>Works</span></h1>
+    </section>
+
+    <section class="project-wrapper">
+        <div class="project-info gsap-fade">
+            <span class="p-number">01</span>
+            <h2>Raw Stone Sanctuary</h2>
+            <div class="project-meta-data">
+                <p>Role: 3D Visualization</p>
+                <p>Type: Residential Space</p>
+                <p>Year: 2025</p>
+            </div>
+        </div>
+        
+        <div class="project-gallery">
+            <div class="swiper mySwiper drag-target">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide"><img src="img/heroiv maydan/1 (2).webp" alt="Render"></div>
+                    <div class="swiper-slide"><img src="img/heroiv maydan/2 (3).webp" alt="Render"></div>
+                    <div class="swiper-slide"><img src="img/heroiv maydan/3 (3).webp" alt="Render"></div>
+                    <div class="swiper-slide"><img src="img/heroiv maydan/4 (2).webp" alt="Render"></div>
+                    <div class="swiper-slide"><img src="img/heroiv maydan/5 (3).webp" alt="Render"></div>
+                    <div class="swiper-slide"><img src="img/heroiv maydan/7 (2).webp" alt="Render"></div>
+                    <div class="swiper-slide"><img src="img/heroiv maydan/8 (2).webp" alt="Render"></div>
+                    <div class="swiper-slide"><img src="img/heroiv maydan/16 (3).webp" alt="Render"></div>
+                    <div class="swiper-slide"><img src="img/heroiv maydan/17 (3).webp" alt="Render"></div>
+                    <div class="swiper-slide"><img src="img/heroiv maydan/20.webp" alt="Render"></div>
+                    <div class="swiper-slide"><img src="img/heroiv maydan/23.webp" alt="Render"></div>
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="project-wrapper">
+        <div class="project-info gsap-fade">
+            <span class="p-number">02</span>
+            <h2>Corporate Minimalism</h2>
+            <div class="project-meta-data">
+                <p>Role: Interior Design & 3D</p>
+                <p>Type: Office Area</p>
+                <p>Year: 2026</p>
+            </div>
+        </div>
+        
+        <div class="project-gallery">
+            <div class="swiper mySwiper drag-target">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide"><img src="img/shypynzi/1.webp" alt="Render"></div>
+                    <div class="swiper-slide"><img src="img/shypynzi/2.webp" alt="Render"></div>
+                    <div class="swiper-slide"><img src="img/shypynzi/2 (2).webp" alt="Render"></div>
+                    <div class="swiper-slide"><img src="img/shypynzi/3.webp" alt="Render"></div>
+                    <div class="swiper-slide"><img src="img/shypynzi/4.webp" alt="Render"></div>
+                    <div class="swiper-slide"><img src="img/shypynzi/5.webp" alt="Render"></div>
+                    <div class="swiper-slide"><img src="img/shypynzi/6.webp" alt="Render"></div>
+                    <div class="swiper-slide"><img src="img/shypynzi/7.webp" alt="Render"></div>
+                    <div class="swiper-slide"><img src="img/shypynzi/8.webp" alt="Render"></div>
+                    <div class="swiper-slide"><img src="img/shypynzi/9.webp" alt="Render"></div>
+                    <div class="swiper-slide"><img src="img/shypynzi/10.webp" alt="Render"></div>
+                    <div class="swiper-slide"><img src="img/shypynzi/12.webp" alt="Render"></div>
+                    <div class="swiper-slide"><img src="img/shypynzi/13.webp" alt="Render"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+     <section class="project-wrapper">
+        <div class="project-info gsap-fade">
+            <span class="p-number">02</span>
+            <h2>Corporate Minimalism</h2>
+            <div class="project-meta-data">
+                <p>Role: Interior Design & 3D</p>
+                <p>Type: Office Area</p>
+                <p>Year: 2026</p>
+            </div>
+        </div>
+        
+        <div class="project-gallery">
+            <div class="swiper mySwiper drag-target">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide"><img src="img/spirt-zavod/кабінет1.webp" alt="Render"></div>
+                    <div class="swiper-slide"><img src="img/spirt-zavod/кабінет3.webp" alt="Render"></div>
+                    <div class="swiper-slide"><img src="img/spirt-zavod/кабінет4.webp" alt="Render"></div>
+                    <div class="swiper-slide"><img src="img/spirt-zavod/приймальна.webp" alt="Render"></div>
+                    <div class="swiper-slide"><img src="img/spirt-zavod/коридор.webp alt="Render"></div>
+                    <div class="swiper-slide"><img src="img/spirt-zavod/кухня1.webp" alt="Render"></div>
+                    <div class="swiper-slide"><img src="img/spirt-zavod/кухня3.webp" alt="Render"></div>
+                    <div class="swiper-slide"><img src="img/spirt-zavod/спальня2.webp" alt="Render"></div>
+                    <div class="swiper-slide"><img src="img/spirt-zavod/спальня4.webp alt="Render"></div>
+                    <div class="swiper-slide"><img src="img/spirt-zavod/спальня6.webp" alt="Render"></div>
+                    <div class="swiper-slide"><img src="img/spirt-zavod/ванна1.webp" alt="Render"></div>
+                    <div class="swiper-slide"><img src="img/spirt-zavod/ванна2.webp" alt="Render"></div>
+                    <div class="swiper-slide"><img src="img/spirt-zavod/45643.webp" alt="Render"></div>
+                    <div class="swiper-slide"><img src="img/spirt-zavod/53452234.webp" alt="Render"></div>
+                    <div class="swiper-slide"><img src="img/spirt-zavod/видзверху.webp" alt="Render"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <script>
+        // 1. СУПЕР КУРСОР
+        const cursor = document.getElementById('cursor');
+        const hoverTargets = document.querySelectorAll('.hover-target, a');
+        const dragTargets = document.querySelectorAll('.drag-target');
+
+        document.addEventListener('mousemove', (e) => {
+            gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.15, ease: "power2.out" });
+        });
+
+        hoverTargets.forEach(target => {
+            target.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+            target.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+        });
+
+        dragTargets.forEach(target => {
+            target.addEventListener('mouseenter', () => cursor.classList.add('drag-mode'));
+            target.addEventListener('mouseleave', () => cursor.classList.remove('drag-mode'));
+            target.addEventListener('mousedown', () => gsap.to(cursor, {scale: 0.8, duration: 0.2}));
+            target.addEventListener('mouseup', () => gsap.to(cursor, {scale: 1, duration: 0.2}));
+        });
+
+        // 2. ІНІЦІАЛІЗАЦІЯ КАРУСЕЛЕЙ
+        var swipers = document.querySelectorAll('.mySwiper');
+        swipers.forEach(function(swiperContainer) {
+            new Swiper(swiperContainer, {
+                slidesPerView: 1.1, 
+                spaceBetween: 40,
+                speed: 1000, 
+                grabCursor: false, 
+                breakpoints: {
+                    320: { slidesPerView: 1.05, spaceBetween: 20 },
+                    1024: { slidesPerView: 1.1, spaceBetween: 40 }
+                }
+            });
+        });
+
+        // 3. GSAP АНІМАЦІЇ ПОЯВИ
+        gsap.registerPlugin(ScrollTrigger);
+
+        gsap.from(".gsap-reveal", {
+            y: 100, opacity: 0, duration: 1.5, ease: "power4.out", delay: 0.2
+        });
+
+        gsap.utils.toArray('.gsap-fade').forEach(element => {
+            gsap.from(element, {
+                scrollTrigger: {
+                    trigger: element,
+                    start: "top 85%", // Анімація спрацьовує трохи раніше для плавності без Lenis
+                },
+                y: 50, opacity: 0, duration: 1.2, ease: "power3.out"
+            });
+        });
+    </script>
+</body>
+</html>
