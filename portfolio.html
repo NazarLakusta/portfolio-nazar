@@ -132,16 +132,6 @@
             .burger.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
             .burger.active span:nth-child(2) { transform: translateY(-8px) rotate(-45deg); }
         }
-
-        /* --- ВИМИКАЄМО КАСТОМНИЙ КУРСОР НА ТАЧСКРІНАХ (ТЕЛЕФОНИ/ПЛАНШЕТИ) --- */
-@media (hover: none) and (pointer: coarse), (max-width: 1024px) {
-    .cursor {
-        display: none !important; /* Ховаємо нашу кастомну кульку */
-    }
-    * {
-        cursor: auto !important; /* Повертаємо стандартну поведінку системи */
-    }
-}
     </style>
 </head>
 <body>
