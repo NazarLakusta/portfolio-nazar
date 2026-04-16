@@ -15,6 +15,7 @@
         :root { 
             --bg: #070707; 
             --text-main: #EAEAEA; 
+            --text-muted: #888888;
             --accent: #ffffff; 
             --font-head: 'Playfair Display', serif; 
             --font-body: 'Manrope', sans-serif; 
@@ -52,6 +53,12 @@
         }
         .cursor.drag-mode span { opacity: 1; }
 
+        /* ВИМИКАЄМО КУРСОР НА ТЕЛЕФОНАХ */
+        @media (hover: none) and (pointer: coarse) {
+            .cursor { display: none !important; }
+            * { cursor: auto !important; }
+        }
+
         /* --- ХЕДЕР --- */
         .main-header {
             position: fixed; top: 0; left: 0; width: 100%; padding: 2rem 4vw; 
@@ -59,10 +66,7 @@
             z-index: 9000; mix-blend-mode: difference; transition: mix-blend-mode 0.3s;
         }
         
-        /* Клас, який додається через JS, щоб меню було видно на мобілці */
-        .main-header.menu-open {
-            mix-blend-mode: normal;
-        }
+        .main-header.menu-open { mix-blend-mode: normal; }
 
         .logo { font-family: var(--font-head); font-size: 1.5rem; font-weight: 600; color: #fff; text-decoration: none; position: relative; z-index: 9002;}
         .nav-links { display: flex; gap: 3rem; }
@@ -72,9 +76,7 @@
         .burger span { display: block; width: 30px; height: 2px; background: #fff; transition: 0.3s; }
 
         /* --- HERO ВСТУП --- */
-        .portfolio-hero {
-            padding: 20vh 4vw 5vh; 
-        }
+        .portfolio-hero { padding: 20vh 4vw 5vh; }
         .hero-title {
             font-family: var(--font-head); font-size: clamp(4rem, 10vw, 12rem);
             font-weight: 400; line-height: 0.9; text-transform: uppercase;
@@ -96,13 +98,20 @@
         .project-info h2 { font-family: var(--font-head); font-size: clamp(2.5rem, 4vw, 4.5rem); font-weight: 400; line-height: 1.1; margin-bottom: 1.5rem; }
         .project-meta-data {
             display: flex; flex-direction: column; gap: 0.5rem;
-            font-size: 0.85rem; color: #888; text-transform: uppercase; letter-spacing: 1px;
+            font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;
+        }
+
+        /* ПІДКАЗКА ДЛЯ МОБІЛЬНИХ (СВАЙПАЙ) */
+        .mobile-swipe-hint {
+            display: none;
+            font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px;
+            color: var(--text-muted); margin-bottom: 1rem;
         }
 
         /* Права частина */
-        .project-gallery { width: 65%; overflow: hidden; }
+        .project-gallery { width: 65%; overflow: hidden; position: relative; }
         
-        .swiper { width: 100%; overflow: visible; }
+        .swiper { width: 100%; overflow: visible; padding-bottom: 20px; /* Місце для лінії прогресу */ }
         .swiper-slide { 
             width: 100%; aspect-ratio: 16/10; overflow: hidden;
             opacity: 0.4; transition: opacity 0.5s ease;
@@ -114,17 +123,28 @@
         }
         .swiper-slide-active img { transform: scale(1); }
 
+        /* КАСТОМНА ЛІНІЯ ПРОГРЕСУ SWIPER */
+        .swiper-pagination-progressbar {
+            background: rgba(255, 255, 255, 0.1) !important;
+            height: 2px !important;
+            top: auto !important; bottom: 0 !important;
+        }
+        .swiper-pagination-progressbar .swiper-pagination-progressbar-fill {
+            background: var(--text-main) !important;
+        }
+
         /* --- АДАПТИВНІСТЬ ДЛЯ МОБІЛЬНИХ --- */
         @media (max-width: 1024px) {
             .project-wrapper { flex-direction: column; padding: 10vh 4vw; }
-            .project-info { width: 100%; position: relative; top: 0; margin-bottom: 3rem; }
+            .project-info { width: 100%; position: relative; top: 0; margin-bottom: 2rem; }
             .project-gallery { width: 100%; }
+            .mobile-swipe-hint { display: block; } /* Показуємо підказку */
             
             .nav-links {
                 position: fixed; top: 0; right: -100%; width: 100vw; height: 100vh;
                 background: var(--bg); flex-direction: column; justify-content: center; align-items: center;
                 transition: 0.5s cubic-bezier(0.77, 0, 0.175, 1);
-                z-index: 9001; /* Лежить під бургером, але перекриває сайт */
+                z-index: 9001; 
             }
             .nav-links.active { right: 0; }
             
@@ -168,6 +188,7 @@
         </div>
         
         <div class="project-gallery">
+            <div class="mobile-swipe-hint">Свайпай галерею &rarr;</div>
             <div class="swiper mySwiper drag-target">
                 <div class="swiper-wrapper">
                     <div class="swiper-slide"><img src="img/heroiv maydan/1 (2).webp" alt="Render"></div>
@@ -182,6 +203,7 @@
                     <div class="swiper-slide"><img src="img/heroiv maydan/20.webp" alt="Render"></div>
                     <div class="swiper-slide"><img src="img/heroiv maydan/23.webp" alt="Render"></div>
                 </div>
+                <div class="swiper-pagination"></div>
             </div>
         </div>
     </section>
@@ -198,6 +220,7 @@
         </div>
         
         <div class="project-gallery">
+            <div class="mobile-swipe-hint">Свайпай галерею &rarr;</div>
             <div class="swiper mySwiper drag-target">
                 <div class="swiper-wrapper">
                     <div class="swiper-slide"><img src="img/shypynzi/1.webp" alt="Render"></div>
@@ -214,12 +237,12 @@
                     <div class="swiper-slide"><img src="img/shypynzi/12.webp" alt="Render"></div>
                     <div class="swiper-slide"><img src="img/shypynzi/13.webp" alt="Render"></div>
                 </div>
+                <div class="swiper-pagination"></div>
             </div>
         </div>
     </section>
 
-
-     <section class="project-wrapper">
+    <section class="project-wrapper">
         <div class="project-info gsap-fade">
             <span class="p-number">03</span>
             <h2>Modern Distillery</h2>
@@ -231,6 +254,7 @@
         </div>
         
         <div class="project-gallery">
+            <div class="mobile-swipe-hint">Свайпай галерею &rarr;</div>
             <div class="swiper mySwiper drag-target">
                 <div class="swiper-wrapper">
                     <div class="swiper-slide"><img src="img/spirt-zavod/кабінет1.webp" alt="Render"></div>
@@ -249,6 +273,7 @@
                     <div class="swiper-slide"><img src="img/spirt-zavod/53452234.webp" alt="Render"></div>
                     <div class="swiper-slide"><img src="img/spirt-zavod/видзверху.webp" alt="Render"></div>
                 </div>
+                <div class="swiper-pagination"></div>
             </div>
         </div>
     </section>
@@ -279,17 +304,24 @@
             target.addEventListener('mouseup', () => gsap.to(cursor, {scale: 1, duration: 0.2}));
         });
 
-        // 2. ІНІЦІАЛІЗАЦІЯ КАРУСЕЛЕЙ
+        // 2. ІНІЦІАЛІЗАЦІЯ КАРУСЕЛЕЙ (ОНОВЛЕНО)
         var swipers = document.querySelectorAll('.mySwiper');
         swipers.forEach(function(swiperContainer) {
             new Swiper(swiperContainer, {
-                slidesPerView: 1.1, 
-                spaceBetween: 40,
+                // Показуємо БІЛЬШЕ наступного слайду (1.2 замість 1.05)
+                slidesPerView: 1.2, 
+                spaceBetween: 20,
                 speed: 1000, 
-                grabCursor: false, 
+                grabCursor: true, // Системна рука при наведенні (допомагає зрозуміти, що можна тягнути)
+                pagination: {
+                    el: swiperContainer.querySelector('.swiper-pagination'),
+                    type: 'progressbar', // Стильна лінія прогресу
+                },
                 breakpoints: {
-                    320: { slidesPerView: 1.05, spaceBetween: 20 },
-                    1024: { slidesPerView: 1.1, spaceBetween: 40 }
+                    1024: { 
+                        slidesPerView: 1.3, // На ПК теж показуємо шматок наступного фото явно
+                        spaceBetween: 40 
+                    }
                 }
             });
         });
@@ -317,14 +349,12 @@
         const navItems = document.querySelectorAll('.nav-links a');
         const mainHeader = document.getElementById('mainHeader');
 
-        // Відкриття/закриття при кліку на сам бургер
         burgerBtn.addEventListener('click', () => {
             burgerBtn.classList.toggle('active');
             navLinks.classList.toggle('active');
-            mainHeader.classList.toggle('menu-open'); // Вимикає mix-blend-mode на мобілці
+            mainHeader.classList.toggle('menu-open');
         });
 
-        // Автоматичне закриття меню при кліку на посилання
         navItems.forEach(item => {
             item.addEventListener('click', () => {
                 burgerBtn.classList.remove('active');
