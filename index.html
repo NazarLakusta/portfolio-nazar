@@ -12,8 +12,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css">
 
     <style>
-        html{
-            scroll-behavior: smooth;
+        html {
+            scroll-behavior: smooth; /* Рідний, ідеально плавний скрол без лагів */
         }
         /* --- CSS VARIABLES & RESET --- */
         :root {
@@ -57,11 +57,9 @@
             mix-blend-mode: difference;
         }
         .cursor.hovered {
-.cursor.hovered {
-    width: 60px; height: 60px;
-    background-color: rgba(255, 255, 255, 0.15); /* Просто напівпрозорий білий */
-    border: 1px solid var(--accent);
-}
+            width: 60px; height: 60px;
+            background-color: rgba(255, 255, 255, 0.15); /* Напівпрозорий білий */
+            border: 1px solid var(--accent);
         }
 
         /* --- PRELOADER --- */
@@ -80,7 +78,6 @@
         }
         .hero-bg {
             position: absolute; inset: -10%; 
-            /* Заміни посилання нижче на свій рендер вітальні */
             background: url('img/webp/livingheader.webp') center/cover;
             z-index: 1;
             will-change: transform;
@@ -127,7 +124,6 @@
             border-radius: 4px; aspect-ratio: 4/5;
             will-change: transform;
         }
-        /* Різні розміри для елементів сітки */
         .item-1 { grid-column: span 8; aspect-ratio: 16/9; }
         .item-2 { grid-column: span 4; }
         .item-3 { grid-column: span 6; aspect-ratio: 1/1; }
@@ -179,7 +175,7 @@
         }
         .submit-btn:hover { background: var(--text-main); color: var(--bg); }
 
-/* --- СТИЛЬ ДЛЯ КНОПКИ В HERO --- */
+        /* --- СТИЛЬ ДЛЯ КНОПКИ В HERO --- */
         .hero-btn {
             margin-top: 2.5rem;
             background: transparent;
@@ -192,15 +188,14 @@
             letter-spacing: 2px;
             border-radius: 40px;
             transition: all 0.4s ease;
-            cursor: none; /* залишаємо кастомний курсор */
-            opacity: 0; /* схована для стартової анімації */
+            cursor: none;
+            opacity: 0;
             transform: translateY(20px);
         }
-
         .hero-btn:hover {
             background: var(--text-main);
             color: var(--bg);
-            transform: scale(1.05); /* Легке збільшення при наведенні */
+            transform: scale(1.05);
         }
         
         @media (max-width: 768px) {
@@ -209,47 +204,42 @@
         }
 
         /* --- HEADER & MENU --- */
-.main-header {
-    color: #EAEAEA;
-    position: fixed; top: 0; left: 0; width: 100%;
-    padding: 2rem 5vw; display: flex; justify-content: space-between; align-items: center;
-    z-index: 9000; /* Робить меню видимим на будь-якому фоні */
-}
-.header-text{
-    color: #EAEAEA;
-}
-.logo { font-family: var(--font-head); font-size: 2rem; font-weight: 600; color: #fff; }
-.nav-links { display: flex; gap: 3rem; }
-.nav-links a { font-size: 1.5rem; text-transform: uppercase; letter-spacing: 1px; color: #fff; position: relative; }
-.nav-links a::after {
-    content: ''; position: absolute; left: 0; bottom: -5px; width: 0; height: 1px;
-    background: #fff; transition: width 0.3s ease;
-}
-.nav-links a:hover::after { width: 100%; }
+        .main-header {
+            color: #EAEAEA;
+            position: fixed; top: 0; left: 0; width: 100%;
+            padding: 2rem 5vw; display: flex; justify-content: space-between; align-items: center;
+            z-index: 9000;
+        }
+        .header-text{ color: #EAEAEA; }
+        .logo { font-family: var(--font-head); font-size: 2rem; font-weight: 600; color: #fff; }
+        .nav-links { display: flex; gap: 3rem; }
+        .nav-links a { font-size: 1.5rem; text-transform: uppercase; letter-spacing: 1px; color: #fff; position: relative; }
+        .nav-links a::after {
+            content: ''; position: absolute; left: 0; bottom: -5px; width: 0; height: 1px;
+            background: #fff; transition: width 0.3s ease;
+        }
+        .nav-links a:hover::after { width: 100%; }
 
-.burger { display: none; flex-direction: column; gap: 6px; z-index: 9001; }
-.burger span { display: block; width: 30px; height: 2px; background: #fff; transition: 0.3s; }
-/* --- ВИМИКАЄМО КАСТОМНИЙ КУРСОР НА ТАЧСКРІНАХ (ТЕЛЕФОНИ/ПЛАНШЕТИ) --- */
-@media (hover: none) and (pointer: coarse), (max-width: 1024px) {
-    .cursor {
-        display: none !important; /* Ховаємо нашу кастомну кульку */
-    }
-    * {
-        cursor: auto !important; /* Повертаємо стандартну поведінку системи */
-    }
-}
+        .burger { display: none; flex-direction: column; gap: 6px; z-index: 9001; }
+        .burger span { display: block; width: 30px; height: 2px; background: #fff; transition: 0.3s; }
+        
+        /* --- ВИМИКАЄМО КАСТОМНИЙ КУРСОР НА ТАЧСКРІНАХ --- */
+        @media (hover: none) and (pointer: coarse), (max-width: 1024px) {
+            .cursor { display: none !important; }
+            * { cursor: auto !important; }
+        }
 
-@media (max-width: 768px) {
-    .nav-links {
-        position: fixed; top: 0; right: -100%; width: 100vw; height: 100vh;
-        background: var(--bg); flex-direction: column; justify-content: center; align-items: center;
-        transition: 0.5s cubic-bezier(0.77, 0, 0.175, 1);
-    }
-    .nav-links.active { right: 0; }
-    .burger { display: flex; }
-    .burger.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
-    .burger.active span:nth-child(2) { transform: translateY(-8px) rotate(-45deg); }
-}
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed; top: 0; right: -100%; width: 100vw; height: 100vh;
+                background: var(--bg); flex-direction: column; justify-content: center; align-items: center;
+                transition: 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+            }
+            .nav-links.active { right: 0; }
+            .burger { display: flex; }
+            .burger.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+            .burger.active span:nth-child(2) { transform: translateY(-8px) rotate(-45deg); }
+        }
     </style>
 </head>
 <body>
@@ -276,9 +266,9 @@
         <div class="hero-content">
             <h1 class="reveal-text">Nazar Lakusta</h1>
             <p class="fade-up">Creating Spaces. Premium 3D & VR.</p>
-<button class="hero-btn fade-up hover-target" onclick="lenis.scrollTo('.contact')">
-    Обговорити проєкт
-</button>
+            <button class="hero-btn fade-up hover-target" onclick="document.querySelector('.contact').scrollIntoView({behavior: 'smooth'})">
+                Обговорити проєкт
+            </button>
         </div>
     </section>
 
@@ -320,10 +310,8 @@
             <h2>Let's discuss<br>your project.</h2>
             <div class="social-links">
                 <a href="https://www.instagram.com/nl.archviz/" class="hover-target">Instagram</a>
-           
                 <a href="https://t.me/nazarko_1703" class="hover-target">Telegram</a>
                 <a href="https://www.behance.net/4570e1c5" class="hover-target">Behance</a>
-
             </div>
         </div>
         <div>
@@ -343,33 +331,12 @@
         </div>
     </section>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
 
 <script>
-    // 1. ВІЛЬНИЙ ПЛАВНИЙ СКРОЛ (Без ефекту магніту/слайдера)
-    const lenis = new Lenis({
-        duration: 1.5, // Робить скрол дуже м'яким і розтягнутим у часі
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), 
-        smoothWheel: true,
-        wheelMultiplier: 1, 
-        touchMultiplier: 2, // М'якше для тачпадів
-        smoothTouch: false, // На телефонах залишаємо рідний
-        infinite: false 
-    });
-
-    // 2. СИНХРОНІЗАЦІЯ З GSAP (Критично важливо для уникнення лагів!)
-    lenis.on('scroll', ScrollTrigger.update);
-
-    gsap.ticker.add((time) => {
-        lenis.raf(time * 1000);
-    });
-
-    gsap.ticker.lagSmoothing(0);
-
-    // 3. КАСТОМНИЙ КУРСОР
+    // 1. КАСТОМНИЙ КУРСОР
     const cursor = document.getElementById('cursor');
     const hoverTargets = document.querySelectorAll('.hover-target, a, button, input, textarea');
 
@@ -382,7 +349,7 @@
         target.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
     });
 
-    // 4. АНІМАЦІЇ (Легкі, без паралаксу)
+    // 2. АНІМАЦІЇ GSAP
     gsap.registerPlugin(ScrollTrigger);
 
     let count = 0;
@@ -424,7 +391,7 @@
         });
     }
 
-    // 5. ПАНОРАМА 360 (Круто, що вже використовуєш .webp!)
+    // 3. ПАНОРАМА 360
     pannellum.viewer('panorama', {
         "type": "equirectangular",
         "panorama": "img/webp/360000.webp",
@@ -434,24 +401,24 @@
         "mouseZoom": false
     });
 
-    // 6. БУРГЕР МЕНЮ ДЛЯ МОБІЛЬНИХ
-const burgerBtn = document.getElementById('burgerBtn');
-const navLinks = document.querySelector('.nav-links');
-const navItems = document.querySelectorAll('.nav-links a');
+    // 4. БУРГЕР МЕНЮ ДЛЯ МОБІЛЬНИХ
+    const burgerBtn = document.getElementById('burgerBtn');
+    const navLinks = document.querySelector('.nav-links');
+    const navItems = document.querySelectorAll('.nav-links a');
 
-// Відкриття/закриття при кліку на сам бургер
-burgerBtn.addEventListener('click', () => {
-    burgerBtn.classList.toggle('active');
-    navLinks.classList.toggle('active');
-});
-
-// Автоматичне закриття меню при кліку на будь-яке посилання всередині нього
-navItems.forEach(item => {
-    item.addEventListener('click', () => {
-        burgerBtn.classList.remove('active');
-        navLinks.classList.remove('active');
+    // Відкриття/закриття при кліку на сам бургер
+    burgerBtn.addEventListener('click', () => {
+        burgerBtn.classList.toggle('active');
+        navLinks.classList.toggle('active');
     });
-});
+
+    // Автоматичне закриття меню при кліку на будь-яке посилання всередині нього
+    navItems.forEach(item => {
+        item.addEventListener('click', () => {
+            burgerBtn.classList.remove('active');
+            navLinks.classList.remove('active');
+        });
+    });
 </script>
 </body>
 </html>
